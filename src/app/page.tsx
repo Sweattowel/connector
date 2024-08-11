@@ -76,7 +76,7 @@ export default function Home() {
         {importedData.length > 0 &&
           (
             <div
-              className="flex flex-row justify-evenly items-center h-[50px] w-[90vw] rounded-t-lg absolute bg-white"
+              className="flex flex-row justify-evenly items-center h-[50px] w-[calc(90vw-1px)] rounded-t-lg absolute bg-white"
             >
               {Object.entries(importedData[0]).map(([key, value], index: number) => (
                 <div
