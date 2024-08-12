@@ -1,0 +1,51 @@
+[
+    {
+      "productId": "P001",
+      "productName": "Wireless Mouse",
+      "category": "Electronics",
+      "price": 29.99,
+      "inStock": true,
+      "rating": 4.5
+    },
+    {
+      "productId": "P002",
+      "productName": "Bluetooth Keyboard",
+      "category": "Electronics",
+      "price": 49.99,
+      "inStock": false,
+      "rating": 4.2
+    },
+    {
+      "productId": "P003",
+      "productName": "Gaming Headset",
+      "category": "Accessories",
+      "price": 89.99,
+      "inStock": true,
+      "rating": 4.7
+    },
+    {
+      "productId": "P004",
+      "productName": "4K Monitor",
+      "category": "Electronics",
+      "price": 299.99,
+      "inStock": true,
+      "rating": 4.8
+    },
+    {
+      "productId": "P005",
+      "productName": "Laptop Stand",
+      "category": "Accessories",
+      "price": 39.99,
+      "inStock": true,
+      "rating": 4.4
+    },
+    {
+      "productId": "P006",
+      "productName": "USB-C Hub",
+      "category": "Accessories",
+      "price": 24.99,
+      "inStock": true,
+      "rating": 4.1
+    }
+  ]
+  

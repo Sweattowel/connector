@@ -1,29 +1,33 @@
 "use client"
 import userData from "./DUMMYDATA/DummyData.json"
+import storeData from "./DUMMYDATA/DummyStoreData.json"
+
 import { useState } from "react";
-import TransformData from "./DUMMYDATA/Transform/Page";
+import TransformData from "./Transform/Page";
 /*
   Data format needs to be fluid so as to handle anything for conversion
 
 
 */
 
-interface dataStruc
-{
-  name: string,
-  language: string,
-  id: string,
-  bio: string,
-  version: number
-}
 const tablesTable: string[] = ['userData', 'storeData', "computerData"]
 
 export default function Home() {
   const [importedData, setImportedData] = useState<any[]>([])
   const [tables, setTables] = useState<string[]>([])
 
-  function importData(){
-    setImportedData(userData)
+  function importData(tableChoice: string){
+    switch (tableChoice) {
+      case "userData":
+        setImportedData(userData)        
+        break;
+      case "storeData":
+        setImportedData(storeData)
+        break;
+      default:
+        break;
+    }
+
   }
   function callTables(){
     if (tablesTable.length > 0){
@@ -45,7 +49,7 @@ export default function Home() {
             >
               <button
                 className="border rounded-lg text-center p-2 hover:shadow hover:shadow-white hover:border-black shadow"
-                onClick={() => importData()}
+                onClick={() => importData(table)}
               >
                 Import {table}
               </button>            
@@ -108,7 +112,7 @@ export default function Home() {
                           value.length > 30 ? "overflow-auto text-center text-[0.7rem] p-1 " : "p-1"
                         } text-wrap w-[100%] h-full text-wrap flex justify-center items-center`}
                       >
-                        {value}
+                        {typeof(value) == "boolean" ? `${value ? "True" : "false"}` : value}
                       </div>
                     </div>
                   ))}

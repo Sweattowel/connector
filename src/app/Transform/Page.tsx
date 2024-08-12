@@ -124,9 +124,9 @@ export default function TransformData({ data }: { data: any }) {
                     )
                   )
                 }}
-                  className={`${!key.include ? "bg-black text-white" : "bg-white "} border rounded-lg p-1 hover:shadow hover:shadow-inner hover:border-black`}
+                  className={`${!key.include ? "bg-black text-white" : "bg-white "} w-[150px] border rounded-lg p-1 hover:shadow hover:shadow-inner hover:border-black`}
                   >
-                  Include?
+                  {!key.include && "Dis"}Include?
                 </button>                
               </div>
             </div>
