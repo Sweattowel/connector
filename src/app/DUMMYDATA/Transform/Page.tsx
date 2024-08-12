@@ -1,12 +1,14 @@
 "use client";
 
+import { error } from "console";
 import { useEffect, useState } from "react";
 interface columnStruc {
   key: string,
   value: any,
   type: string,
   include: boolean,
-  takeFrom: boolean
+  takeFrom: boolean,
+  error: string
 }
 export default function TransformData({ data }: { data: any }) {
 
@@ -21,7 +23,8 @@ export default function TransformData({ data }: { data: any }) {
           value: value,
           type:typeof(value),
           include: true,
-          takeFrom: false
+          takeFrom: false,
+          error: "key"
         });
       }
       setKeys(newKeys);
@@ -54,8 +57,24 @@ export default function TransformData({ data }: { data: any }) {
             >
               <div className="flex w-full justify-evenly">
                 <input
-                  className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
+                  className={`${key.error === "Duplicate Key" && "bg-red-600 animate-pulse"} w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black`}
                   type="text"
+                  onChange={(e) => {
+                    const newKey = e.target.value;
+                    if (keys.filter(k => k.key === newKey).length > 0){
+                      setKeys((prevKeys) => 
+                        prevKeys.map((item) =>
+                          item.key === key.key ? {...item, error: `Duplicate Key`} : item
+                        )
+                      )
+                      return
+                    }
+                    setKeys((prevKeys) => 
+                      prevKeys.map((item) =>
+                        item.key === key.key ? {...item, key: `${e.target.value}`, error: ""} : item
+                      )
+                    )
+                  }}
                   placeholder={key.key}
                 />
                 <div className="w-[150px] flex justify-evenly items-center">
@@ -72,7 +91,7 @@ export default function TransformData({ data }: { data: any }) {
                     onClick={() => {
                       setKeys((prevKeys) => 
                         prevKeys.map((item) => 
-                        item.key === key.key ? {...item, takeFrom: !item.takeFrom, include: item.takeFrom} : item
+                        item.key === key.key ? {...item, takeFrom: true } : item
                         )
                       )
                     }}
@@ -80,11 +99,11 @@ export default function TransformData({ data }: { data: any }) {
                     Take From
                   </button>
                   <button
-                    className={`${key.include && "bg-black text-white"} w-[100px] h-[50%] text-center border rounded hover:shadow hover:shadow-inner hover:border-black`}
+                    className={`${!key.takeFrom && "bg-black text-white"} w-[100px] h-[50%] text-center border rounded hover:shadow hover:shadow-inner hover:border-black`}
                     onClick={() => {
                       setKeys((prevKeys) => 
                         prevKeys.map((item) => 
-                          item.key === key.key ? {...item, include: !item.include, takeFrom: item.include} : item
+                          item.key === key.key ? {...item, takeFrom: false } : item
                         )
                       )
                     }}
@@ -97,7 +116,16 @@ export default function TransformData({ data }: { data: any }) {
                   className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
                   placeholder="Default value?"
                 />
-                <button className="bg-white border rounded-lg p-1 hover:shadow hover:shadow-inner hover:border-black">
+                <button 
+                onClick={() => {
+                  setKeys((prevKeys) => 
+                    prevKeys.map((item) => 
+                      item.key === key.key ? {...item, include: !item.include} : item
+                    )
+                  )
+                }}
+                  className={`${!key.include ? "bg-black text-white" : "bg-white "} border rounded-lg p-1 hover:shadow hover:shadow-inner hover:border-black`}
+                  >
                   Include?
                 </button>                
               </div>
