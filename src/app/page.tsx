@@ -4,6 +4,7 @@ import storeData from "./DUMMYDATA/DummyStoreData.json"
 
 import { useState } from "react";
 import TransformData from "./Transform/Page";
+import Export from "./Export/page";
 /*
   Data format needs to be fluid so as to handle anything for conversion
 
@@ -15,6 +16,7 @@ const tablesTable: string[] = ['userData', 'storeData', "computerData"]
 export default function Home() {
   const [importedData, setImportedData] = useState<any[]>([])
   const [tables, setTables] = useState<string[]>([])
+  const [newKeys, SetNewKeys] = useState([])
 
   function importData(tableChoice: string){
     switch (tableChoice) {
@@ -34,6 +36,7 @@ export default function Home() {
       setTables(tablesTable)
     }
   }
+
   return (
     <main className="flex min-h-[200vh] flex-col items-center justify-evenly p-24 bg-black">      
     <section 
@@ -135,7 +138,12 @@ export default function Home() {
         </h2>
         <div>
           {importedData && importedData.length > 0 && (
-            <TransformData data={importedData}/>
+            <TransformData 
+              exportNewKeys={(data) => 
+                SetNewKeys(data)
+              } 
+              data={importedData}
+            />
           )}
           
         </div>
@@ -148,7 +156,7 @@ export default function Home() {
         >
           Export Data
         </h2>
-
+          <Export keyData={newKeys} />
       </section>
     </main>
   );

@@ -10,6 +10,7 @@ interface columnStruc {
   include: boolean,
   takeFrom: boolean,
   takeFromWhere: string,
+  takeWhat: string,
   error: string
 }
 
@@ -19,7 +20,11 @@ const itemTypes = [
   "boolean",
   "float",
 ]
-export default function TransformData({ data }: { data: any }) {
+interface importStruc {
+  data: any,
+  exportNewKeys: (data: any) => any;
+}
+export default function TransformData({ data, exportNewKeys }: importStruc) {
   const [seeDropDownMenu, setSeeDropDownMenu] = useState("")
   const [keys, setKeys] = useState<any[]>([]);
 
@@ -33,11 +38,14 @@ export default function TransformData({ data }: { data: any }) {
       for (const [key, value] of Object.entries(data[0])) {
         newKeys.push({
           key: key, 
-          value: value,
+          value: "",
+          defaultValueToEnter: "",
           type:typeof(value),
           include: true,
           takeFrom: false,
-          error: "key"
+          takeFromWhere : "",
+          takeWhat: "",
+          error: ""
         });
       }
       setKeys(newKeys);
@@ -94,7 +102,7 @@ export default function TransformData({ data }: { data: any }) {
                   AS
                   <button 
                     onClick={() => {
-                      if (key.key === ""){
+                      if (key.key === "" || seeDropDownMenu === key.key){
                         setSeeDropDownMenu("")
                         return
                       }
@@ -148,18 +156,35 @@ export default function TransformData({ data }: { data: any }) {
                 </div>
                 {key.takeFrom ? 
                 (
-                  <input 
-                    type="text" 
-                    className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
-                    placeholder="Take from where?"
-                    onChange={(e) => 
-                      setKeys((prevKeys) => 
-                        prevKeys.map((item) => 
-                          item.key === key.key ? {...item, takeFromWhere: e.target.value} : item
+                  <div
+                    className="flex flex-col"
+                  >
+                    <input 
+                      type="text" 
+                      className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
+                      placeholder="Take from where?"
+                      onChange={(e) => 
+                        setKeys((prevKeys) => 
+                          prevKeys.map((item) => 
+                            item.key === key.key ? {...item, takeFromWhere: e.target.value} : item
+                          )
                         )
-                      )
-                    }
-                  />                    
+                      }
+                    />
+                    <input 
+                      type="text" 
+                      className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
+                      placeholder="Take What from where?"
+                      onChange={(e) => 
+                        setKeys((prevKeys) => 
+                          prevKeys.map((item) => 
+                            item.key === key.key ? {...item, takeWhat: e.target.value} : item
+                          )
+                        )
+                      }
+                    />                        
+                  </div>
+                
                 )
                 :
                 (
@@ -197,13 +222,23 @@ export default function TransformData({ data }: { data: any }) {
           <div>No data available</div>
         )}
       </ul>
-
-      <button
-        className="h-[30px] w-[150px] flex justify-center items-center border rounded-lg p-1 m-auto hover:shadow hover:shadow-inner hover:border-black"
-        onClick={addNewKey}
-      >
-        New Column?
-      </button>
+        <section
+          className="flex border-t w-[60%] h-[50px] m-auto justify-center items-center"
+        >
+          <button
+            className="h-[30px] w-[150px] flex justify-center items-center border rounded-lg p-1 m-auto hover:shadow hover:shadow-inner hover:border-black"
+            onClick={addNewKey}
+          >
+            New Column?
+          </button>
+          <button
+            className="h-[30px] w-[150px] flex justify-center items-center border rounded-lg p-1 m-auto hover:shadow hover:shadow-inner hover:border-black"
+            onClick={() => exportNewKeys(keys)}
+          >
+            SetNewKeys?
+          </button>          
+        </section>
+      
     </main>
   );
 }
