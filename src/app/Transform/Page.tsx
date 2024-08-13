@@ -1,18 +1,31 @@
 "use client";
 
-import { error } from "console";
 import { useEffect, useState } from "react";
+import DropDown from "./Components/DropDown";
 interface columnStruc {
   key: string,
   value: any,
+  defaultValueToEnter: string,
   type: string,
   include: boolean,
   takeFrom: boolean,
+  takeFromWhere: string,
   error: string
 }
-export default function TransformData({ data }: { data: any }) {
 
-  const [keys, setKeys] = useState<columnStruc[]>([]);
+const itemTypes = [
+  "number",
+  "string",
+  "boolean",
+  "float",
+]
+export default function TransformData({ data }: { data: any }) {
+  const [seeDropDownMenu, setSeeDropDownMenu] = useState("")
+  const [keys, setKeys] = useState<any[]>([]);
+
+  function handleShowMenu(key: string){
+    setSeeDropDownMenu(key)
+  }
 
   useEffect(() => {
     if (data) {
@@ -57,7 +70,7 @@ export default function TransformData({ data }: { data: any }) {
             >
               <div className="flex w-full justify-evenly">
                 <input
-                  className={`${key.error === "Duplicate Key" && "bg-red-600 animate-pulse"} w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black`}
+                  className={`${(key.error === "Duplicate Key") || (key.key === "") && "bg-red-600 animate-pulse"} w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black`}
                   type="text"
                   onChange={(e) => {
                     const newKey = e.target.value;
@@ -79,9 +92,31 @@ export default function TransformData({ data }: { data: any }) {
                 />
                 <div className="w-[150px] flex justify-evenly items-center">
                   AS
-                  <button className="w-[100px] border rounded-lg p-1 hover:shadow hover:shadow-inner hover:border-black">
+                  <button 
+                    onClick={() => {
+                      if (key.key === ""){
+                        setSeeDropDownMenu("")
+                        return
+                      }
+                      handleShowMenu(key.key)
+                    }}
+                    className="w-[100px] border rounded-lg p-1 hover:shadow hover:shadow-inner hover:border-black">
                     {key.type}
                   </button>
+                  {seeDropDownMenu === key.key && key.key !== "" &&
+                    <DropDown 
+                      menuItems={itemTypes} 
+                      handleDropDownSubmit={(newTypeToEnter) => {
+                        setSeeDropDownMenu("")
+                        setKeys((prevKeys) => 
+                          prevKeys.map((item) => 
+                            item.key === key.key ? {...item, type: newTypeToEnter} : item
+                          )
+                        )
+                      }}
+                    />
+                  }
+                  
                 </div>
                 <div
                   className="flex flex-col"
@@ -111,11 +146,38 @@ export default function TransformData({ data }: { data: any }) {
                     Default set
                   </button>
                 </div>
-                <input 
-                  type="text" 
-                  className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
-                  placeholder="Default value?"
-                />
+                {key.takeFrom ? 
+                (
+                  <input 
+                    type="text" 
+                    className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
+                    placeholder="Take from where?"
+                    onChange={(e) => 
+                      setKeys((prevKeys) => 
+                        prevKeys.map((item) => 
+                          item.key === key.key ? {...item, takeFromWhere: e.target.value} : item
+                        )
+                      )
+                    }
+                  />                    
+                )
+                :
+                (
+                  <input 
+                    type="text" 
+                    className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
+                    placeholder="Default value?"
+                    onChange={(e) => 
+                      setKeys((prevKeys) => 
+                        prevKeys.map((item) => 
+                          item.key === key.key ? {...item, defaultValueToEnter: e.target.value} : item
+                        )
+                      )
+                    }
+                  />                  
+                )
+                }
+
                 <button 
                 onClick={() => {
                   setKeys((prevKeys) => 
