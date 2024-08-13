@@ -75,7 +75,7 @@ export default function TransformData({ data, exportNewKeys }: importStruc) {
         {keys.length > 0 ? (
           keys.map((key: keyStruc, index: number) => (
             <div
-              className="flex-1 h-[100%] max-w-[100%] flex flex items-center justify-center p-1"
+              className={`${key.ID && !key.include && "animate-pulse bg-red-600"} flex-1 h-[100%] max-w-[100%] flex flex items-center justify-center p-1`}
               key={index}
             >
               <div className="flex w-full justify-evenly">

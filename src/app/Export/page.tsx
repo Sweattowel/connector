@@ -17,7 +17,7 @@ interface KeyStruc {
 
 interface ExportProps {
     keyData: KeyStruc[];
-    dataToUse: any; // Adjust this type based on the structure of `dataToUse`
+    dataToUse: any;
 }
 
 const Export = ({ keyData, dataToUse }: ExportProps) => {
@@ -31,7 +31,7 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
     return (
         <main className="max-h-[80vh] overflow-auto">
             <ul className="flex w-full justify-evenly items-center divide-y">
-                {keyDataCollect.map((key: KeyStruc, index: number) => (
+                {keyDataCollect.map((key: KeyStruc, index: number) => key.include && (
                     <li
                         key={index}
                         className="flex flex-col justify-center items-center m-auto w-full"
@@ -45,16 +45,11 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
                                     key={userIndex}
                                     className="h-[150px] w-full flex justify-center items-center"
                                 >
-                                    {Object.entries(user).map(([k, v]) => (
-                                        k === key.key && (
-                                            <div
-                                                className="overflow-auto h-full flex justify-center items-center w-full border"
-                                                key={k}
-                                            >
-                                                {v}{key.defaultValueToEnter}
-                                            </div>
-                                        )
-                                    ))}
+                                    <div
+                                        className="overflow-auto h-full flex justify-center items-center w-full border"
+                                    >
+                                        {user[key.key] !== undefined ? user[key.key] : key.defaultValueToEnter}
+                                    </div>
                                 </div>
                             ))}
                         </div>
