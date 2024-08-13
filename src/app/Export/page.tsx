@@ -1,20 +1,68 @@
-const Export = ({keyData} : any) => {
+'use client';
+import userData from "../DUMMYDATA/DummyData.json";
+import { useEffect, useState } from "react";
+
+interface KeyStruc {
+    ID: boolean;
+    key: string;
+    value: any;
+    defaultValueToEnter: string;
+    type: string;
+    include: boolean;
+    takeFrom: boolean;
+    takeFromWhere: string;
+    takeWhat: string;
+    error: string;
+}
+
+interface ExportProps {
+    keyData: KeyStruc[];
+    dataToUse: any; // Adjust this type based on the structure of `dataToUse`
+}
+
+const Export = ({ keyData, dataToUse }: ExportProps) => {
+    const [keyDataCollect, setKeyDataCollect] = useState<KeyStruc[]>([]);
+
+    useEffect(() => {
+        setKeyDataCollect(keyData);
+        console.log(keyData);
+    }, [keyData]);
+
     return (
-        <main>
-            <ul 
-                className="flex w-full justify-evenly items-center divide-x"
-            >
-                {keyData.map((arg :any, index: number) => (
+        <main className="max-h-[80vh] overflow-auto">
+            <ul className="flex w-full justify-evenly items-center divide-y">
+                {keyDataCollect.map((key: KeyStruc, index: number) => (
                     <li
                         key={index}
-                        className="flex justify-center items-center m-auto"
+                        className="flex flex-col justify-center items-center m-auto w-full"
                     >
-                        {arg.key}
+                        <h2 className="h-[100px] w-full flex justify-center items-center">
+                            {key.key} as {key.type}
+                        </h2>
+                        <div className="divide-y w-full flex flex-col justify-center items-center">
+                            {userData.map((user: any, userIndex: number) => (
+                                <div
+                                    key={userIndex}
+                                    className="h-[150px] w-full flex justify-center items-center"
+                                >
+                                    {Object.entries(user).map(([k, v]) => (
+                                        k === key.key && (
+                                            <div
+                                                className="overflow-auto h-full flex justify-center items-center w-full border"
+                                                key={k}
+                                            >
+                                                {v}{key.defaultValueToEnter}
+                                            </div>
+                                        )
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
                     </li>
                 ))}
             </ul>
         </main>
-    )
-}
+    );
+};
 
-export default Export
+export default Export;

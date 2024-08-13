@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import DropDown from "./Components/DropDown";
-interface columnStruc {
+interface keyStruc {
+  ID: boolean,
   key: string,
   value: any,
   defaultValueToEnter: string,
@@ -37,6 +38,7 @@ export default function TransformData({ data, exportNewKeys }: importStruc) {
       let newKeys = [];
       for (const [key, value] of Object.entries(data[0])) {
         newKeys.push({
+          ID: false,
           key: key, 
           value: "",
           defaultValueToEnter: "",
@@ -71,7 +73,7 @@ export default function TransformData({ data, exportNewKeys }: importStruc) {
     <main className="min-h-[32vh] flex flex-col justify-evenly">
       <ul className="flex flex-col flex-wrap divide-y mb-2">
         {keys.length > 0 ? (
-          keys.map((key: columnStruc, index: number) => (
+          keys.map((key: keyStruc, index: number) => (
             <div
               className="flex-1 h-[100%] max-w-[100%] flex flex items-center justify-center p-1"
               key={index}
@@ -214,7 +216,19 @@ export default function TransformData({ data, exportNewKeys }: importStruc) {
                   className={`${!key.include ? "bg-black text-white" : "bg-white "} w-[150px] border rounded-lg p-1 hover:shadow hover:shadow-inner hover:border-black`}
                   >
                   {!key.include && "Dis"}Include?
-                </button>                
+                </button>     
+                <button 
+                onClick={() => {
+                  setKeys((prevKeys) => 
+                    prevKeys.map((item) => 
+                      item.key === key.key ? {...item, ID: true} : {...item, ID: false}
+                    )
+                  )
+                }}
+                  className={`${key.ID ? "bg-black text-white" : "bg-white "} w-[150px] border rounded-lg p-1 hover:shadow hover:shadow-inner hover:border-black`}
+                  >
+                  {key.ID ? "ID SET" : "Set as ID?"}
+                </button>             
               </div>
             </div>
           ))
@@ -233,7 +247,9 @@ export default function TransformData({ data, exportNewKeys }: importStruc) {
           </button>
           <button
             className="h-[30px] w-[150px] flex justify-center items-center border rounded-lg p-1 m-auto hover:shadow hover:shadow-inner hover:border-black"
-            onClick={() => exportNewKeys(keys)}
+            onClick={() => {
+              exportNewKeys(keys)
+            }}
           >
             SetNewKeys?
           </button>          

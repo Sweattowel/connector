@@ -38,7 +38,7 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-[200vh] flex-col items-center justify-evenly p-24 bg-black">      
+    <main className="flex min-h-[250vh] flex-col items-center justify-evenly p-24 bg-black">      
     <section 
         className="border border-white p-5 rounded-lg h-[10vh] w-[80vw] flex text-white"
       >
@@ -156,7 +156,9 @@ export default function Home() {
         >
           Export Data
         </h2>
-          <Export keyData={newKeys} />
+          <Export 
+            keyData={newKeys} 
+          />
       </section>
     </main>
   );
