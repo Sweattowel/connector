@@ -1,5 +1,4 @@
 'use client';
-import userData from "../DUMMYDATA/DummyData.json";
 import { useEffect, useState } from "react";
 
 interface KeyStruc {
@@ -21,30 +20,53 @@ interface ExportProps {
 }
 
 const Export = ({ keyData, dataToUse }: ExportProps) => {
-    const [keyDataCollect, setKeyDataCollect] = useState<KeyStruc[]>([]);
+    const [keyDataCollect, setKeyDataCollect] = useState<Record<string, any>[]>([]);
 
     useEffect(() => {
-        const newKeyData = userData.map((user: any) => 
+        if (!keyData || keyData.length === 0 || !dataToUse || dataToUse.length === 0) {
+            console.log("failed");
+            return;
+        }
+
+        const newKeyData = dataToUse.map((data: any) =>
             keyData.reduce((acc, key) => {
                 if (key.include) {
-                    acc[key.key] = user[key.key] !== undefined ? user[key.key] : key.defaultValueToEnter;
+                    acc[key.key] = {
+                        ...key, 
+                        value: data[key.key] !== undefined ? data[key.key] : key.defaultValueToEnter
+                    };
                 }
                 return acc;
-            }, {} as Record<string, any>)
+            }, {} as Record<string, KeyStruc>)
         );
-        console.log(newKeyData);
+
+        console.log(newKeyData || "failed");
         setKeyDataCollect(newKeyData);
-    }, [keyData]);
+    }, [keyData, dataToUse]);
+
+    const handleInputChange = (index: number, key: string, value: any) => {
+        setKeyDataCollect((prevData) =>
+            prevData.map((item, i) =>
+                i === index
+                    ? {
+                        ...item,
+                        [key]: {
+                            ...item[key],
+                            value: value,
+                        },
+                    }
+                    : item
+            )
+        );
+    };
 
     return (
         <main className="max-h-[80vh] overflow-auto">
-            <ul className="flex flex-col w-full justify-evenly items-center divide-y">
-                <div
-                    className="flex w-full h-[100px] shadow-lg"
-                >
+            <ul className="flex flex-col w-full justify-evenly items-center divide-y ">
+                <div className="flex w-full h-[100px] ">
                     {keyData.map((key: KeyStruc, index: number) => key.include && (
                         <div
-                            className="h-full w-full flex justify-center items-center"
+                            className="h-full w-full flex justify-center items-center "
                             key={index}
                         >
                             {key.key}
@@ -52,18 +74,34 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
                     ))}
                 </div>
                 {keyDataCollect.map((data: any, index: number) => (
-                    <li
-                    className="flex h-[150px] w-full"
-                        key={index}
-                    >
-                        {Object.entries(data).map(([k, v]) => (
+                    <li className="flex h-[150px] w-full" key={index}>
+                        {Object.entries(data).map(([key, value]) => (
                             <div
-                                key={k}
-                                className="h-full w-full overflow-auto flex justify-center items-center"
+                                className="w-full"
+                                key={key}
                             >
-                                {v}
-                            </ div>
-                            
+                                {value.ID ? (
+                                    <h2
+                                        className="h-full w-full overflow-auto flex justify-center items-center text-center"
+                                    >
+                                        {value.value}
+                                    </h2>
+                                ) : (
+                                    <input
+                                        
+                                        className="h-full w-full overflow-auto flex justify-center items-center text-center"
+                                        value={value.type !== 'boolean' ? value.value : value.type ? "true" : "false"}
+                                        onChange={(e) => {
+                                            if (value.ID){
+                                                return
+                                            }
+                                            handleInputChange(index, key, e.target.value)
+                                        }}
+                                    />                                
+                                )}                            
+                            </div>
+
+
                         ))}
                     </li>
                 ))}
@@ -73,29 +111,3 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
 };
 
 export default Export;
-/*
-{keyData.map((key: KeyStruc, index: number) => key.include && (
-                    <li
-                        key={index}
-                        className="flex flex-col justify-center items-center m-auto w-full"
-                    >
-                        <h2 className="h-[100px] w-full flex justify-center items-center">
-                            {key.key}: {key.type}
-                        </h2>
-                        <div className="divide-y w-full flex flex-col justify-center items-center">
-                            {keyDataCollect.map((user: any, userIndex: number) => (
-                                <div
-                                    key={userIndex}
-                                    className="h-[150px] w-full flex justify-center items-center"
-                                >
-                                    <div
-                                        className="overflow-auto h-full flex justify-center items-center w-full border"
-                                    >
-                                        {user[key.key]}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </li>
-                ))}
-*/

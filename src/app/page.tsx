@@ -158,6 +158,7 @@ export default function Home() {
         </h2>
           <Export 
             keyData={newKeys} 
+            dataToUse={importedData}
           />
       </section>
     </main>
