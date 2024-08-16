@@ -40,6 +40,7 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
             }, {} as Record<string, KeyStruc>)
         );
 
+        console.log(`INSERT INTO users (${keyData.map((data) => data.key)}) VALUES(${keyData})`)
         console.log(newKeyData || "failed");
         setKeyDataCollect(newKeyData);
     }, [keyData, dataToUse]);
@@ -75,30 +76,56 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
                 </div>
                 {keyDataCollect.map((data: any, index: number) => (
                     <li className="flex h-[150px] w-full" key={index}>
-                        {Object.entries(data).map(([key, value]) => (
+                        {Object.entries(data).map(([key, value] : any) => (
                             <div
                                 className="w-full"
                                 key={key}
                             >
                                 {value.ID ? (
-                                    <h2
-                                        className="h-full w-full overflow-auto flex justify-center items-center text-center"
-                                    >
+                                    <h2 className="h-full w-full overflow-auto flex justify-center items-center text-center">
                                         {value.value}
                                     </h2>
                                 ) : (
-                                    <input
-                                        
-                                        className="h-full w-full overflow-auto flex justify-center items-center text-center"
-                                        value={value.type !== 'boolean' ? value.value : value.type ? "true" : "false"}
-                                        onChange={(e) => {
-                                            if (value.ID){
-                                                return
-                                            }
-                                            handleInputChange(index, key, e.target.value)
-                                        }}
-                                    />                                
-                                )}                            
+                                    <>
+                                        {value.type == "boolean" && !value.ID && (
+                                            <button
+                                                className="hover:opacity-60 h-full w-full overflow-auto flex justify-center items-center text-center"
+                                                
+                                                value={value.value}
+                                                onClick={(e) => {
+                                                    if (value.ID) return;
+                                                    handleInputChange(index, key, value.value == "true" ? "false" : "true" );
+                                                }}
+                                            >
+                                                {value.value ? "True" : "false"}
+                                            </button>
+                                        )}     
+                                        {value.type == "number" && !value.ID && (
+                                            <input
+                                                className="h-full w-full overflow-auto flex justify-center items-center text-center"
+                                                type="number"
+                                                value={value.value}
+                                                onChange={(e) => {
+                                                    if (value.ID) return;
+                                                    handleInputChange(index, key, e.target.value);
+                                                }}
+                                            />
+                                        )}    
+                                        {value.type == "string" && !value.ID && (
+                                            <input
+                                                className="h-full w-full overflow-auto flex justify-center items-center text-center"
+                                                type="text"
+                                                value={value.value}
+                                                onChange={(e) => {
+                                                    if (value.ID) return;
+                                                    handleInputChange(index, key, e.target.value);
+                                                }}
+                                            />
+                                        )}    
+                                    </>
+
+                                )}
+                                                        
                             </div>
 
 
