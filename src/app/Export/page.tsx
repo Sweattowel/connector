@@ -27,7 +27,7 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
             console.log("failed");
             return;
         }
-
+        setKeyDataCollect([])
         const newKeyData = dataToUse.map((data: any) =>
             keyData.reduce((acc, key) => {
                 if (key.include) {
@@ -39,8 +39,6 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
                 return acc;
             }, {} as Record<string, KeyStruc>)
         );
-
-        console.log(`INSERT INTO users (${keyData.map((data) => data.key)}) VALUES(${keyData})`)
         console.log(newKeyData || "failed");
         setKeyDataCollect(newKeyData);
     }, [keyData, dataToUse]);
@@ -59,6 +57,7 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
                     : item
             )
         );
+        console.log("Updated Data: ", keyDataCollect);
     };
 
     return (
@@ -67,10 +66,10 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
                 <div className="flex w-full h-[100px] ">
                     {keyData.map((key: KeyStruc, index: number) => key.include && (
                         <div
-                            className="h-full w-full flex justify-center items-center "
+                            className="h-full w-full flex justify-center items-center text-center"
                             key={index}
                         >
-                            {key.key}
+                            {key.key} {key.takeFrom && "From"} {key.takeFromWhere}
                         </div>
                     ))}
                 </div>
@@ -87,48 +86,71 @@ const Export = ({ keyData, dataToUse }: ExportProps) => {
                                     </h2>
                                 ) : (
                                     <>
-                                        {value.type == "boolean" && !value.ID && (
-                                            <button
-                                                className="hover:opacity-60 h-full w-full overflow-auto flex justify-center items-center text-center"
-                                                
-                                                value={value.value}
-                                                onClick={(e) => {
-                                                    if (value.ID) return;
-                                                    handleInputChange(index, key, value.value == "true" ? "false" : "true" );
-                                                }}
+                                        {value.takeFrom ? (
+                                            <div
+                                                className="flex justify-center items-center text-center h-full w-full"
                                             >
-                                                {value.value ? "True" : "false"}
-                                            </button>
-                                        )}     
-                                        {value.type == "number" && !value.ID && (
-                                            <input
-                                                className="h-full w-full overflow-auto flex justify-center items-center text-center"
-                                                type="number"
-                                                value={value.value}
-                                                onChange={(e) => {
-                                                    if (value.ID) return;
-                                                    handleInputChange(index, key, e.target.value);
-                                                }}
-                                            />
-                                        )}    
-                                        {value.type == "string" && !value.ID && (
-                                            <input
-                                                className="h-full w-full overflow-auto flex justify-center items-center text-center"
-                                                type="text"
-                                                value={value.value}
-                                                onChange={(e) => {
-                                                    if (value.ID) return;
-                                                    handleInputChange(index, key, e.target.value);
-                                                }}
-                                            />
-                                        )}    
+                                                {value.type === "boolean" && (
+                                                    <button
+                                                        className="hover:opacity-60 h-full w-full overflow-auto flex justify-center items-center text-center" 
+                                                        value={value.takeWhat}
+                                                        onClick={() => {
+                                                            handleInputChange(index, key, !value.takeWhat);
+                                                        }}
+                                                    >
+                                                        {value.value}
+                                                    </button>
+                                                )}     
+                                                {value.type === "number" && (
+                                                    <input
+                                                        className="h-full w-full overflow-auto flex justify-center items-center text-center"
+                                                        type="number"
+                                                        value={value.takeWhat}
+                                                        onChange={(e) => handleInputChange(index, key, e.target.value)}
+                                                    />
+                                                )}    
+                                                {value.type === "string" && (
+                                                    <input
+                                                        className="h-full w-full overflow-auto flex justify-center items-center text-center"
+                                                        type="text"
+                                                        value={value.takeWhat}
+                                                        onChange={(e) => handleInputChange(index, key, e.target.value)}
+                                                    />
+                                                )} 
+                                            </div>
+                                            
+                                        ) : (
+                                            <>
+                                                {value.type === "boolean" && (
+                                                    <button
+                                                        className="hover:opacity-60 h-full w-full overflow-auto flex justify-center items-center text-center" 
+                                                        value={value.value}
+                                                        onClick={() => handleInputChange(index, key, !value.value)}
+                                                    >
+                                                        {value.value}
+                                                    </button>
+                                                )}     
+                                                {value.type === "number" && (
+                                                    <input
+                                                        className="h-full w-full overflow-auto flex justify-center items-center text-center"
+                                                        type="number"
+                                                        value={value.value}
+                                                        onChange={(e) => handleInputChange(index, key, e.target.value)}
+                                                    />
+                                                )}    
+                                                {value.type === "string" && (
+                                                    <input
+                                                        className="h-full w-full overflow-auto flex justify-center items-center text-center"
+                                                        type="text"
+                                                        value={value.value}
+                                                        onChange={(e) => handleInputChange(index, key, e.target.value)}
+                                                    />
+                                                )}                                                  
+                                            </>
+                                        )}
                                     </>
-
                                 )}
-                                                        
                             </div>
-
-
                         ))}
                     </li>
                 ))}

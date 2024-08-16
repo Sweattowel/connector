@@ -58,17 +58,32 @@ export default function TransformData({ data, exportNewKeys }: importStruc) {
 
     const updatedKeys = [...keys, 
       {
+        ID: false,
         key: `Key N*${keys.length + 1}`,
-        value: 'Undefined',
         type: "string",
         include: true,
-        takeFrom: false
+        takeFrom: false,
+        takeFromWhere: "",
+        takeWhat: "",
+        error: ""
       }
     ];
 
     setKeys(updatedKeys);
   };
+/**
+  ID: boolean,
+  key: string,
+  value: any,
+  defaultValueToEnter: string,
+  type: string,
+  include: boolean,
+  takeFrom: boolean,
+  takeFromWhere: string,
+  takeWhat: string,
+  error: string
 
+ */
   return (
     <main className="min-h-[32vh] flex flex-col justify-evenly">
       <ul className="flex flex-col flex-wrap divide-y mb-2">
@@ -173,35 +188,70 @@ export default function TransformData({ data, exportNewKeys }: importStruc) {
                         )
                       }
                     />
-                    <input 
-                      type="text" 
-                      className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
-                      placeholder="Take What from where?"
-                      onChange={(e) => 
-                        setKeys((prevKeys) => 
-                          prevKeys.map((item) => 
-                            item.key === key.key ? {...item, takeWhat: e.target.value} : item
+                    {key.type == "boolean" ? (
+                      <button
+                        className="hover:opacity-60 border"
+                        onClick={() => 
+                          setKeys((prevKeys) => 
+                            prevKeys.map((item) => 
+                              item.key == key.key ? {...item, takeWhat: key.takeWhat ? false : true} : item
+                            )
                           )
-                        )
-                      }
-                    />                        
+                        }
+                      >
+                        {key.takeWhat ? 'True' : 'False'}
+                      </button>
+                    ) : (
+                      <input 
+                        type={`${key.type}`}
+                        className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
+                        placeholder="Take What from where?"
+                        onChange={(e) => 
+                          setKeys((prevKeys) => 
+                            prevKeys.map((item) => 
+                              item.key === key.key ? {...item, takeWhat: e.target.value} : item
+                            )
+                          )
+                        }
+                      />                          
+                    )}
+                    
                   </div>
                 
                 )
                 :
                 (
-                  <input 
-                    type="text" 
-                    className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
-                    placeholder="Default value?"
-                    onChange={(e) => 
-                      setKeys((prevKeys) => 
-                        prevKeys.map((item) => 
-                          item.key === key.key ? {...item, defaultValueToEnter: e.target.value} : item
-                        )
-                      )
-                    }
-                  />                  
+                  <>
+                    {key.type !== "boolean" && (
+                      <input 
+                        type="text" 
+                        className="w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
+                        placeholder="Default value?"
+                        onChange={(e) => 
+                          setKeys((prevKeys) => 
+                            prevKeys.map((item) => 
+                              item.key === key.key ? {...item, defaultValueToEnter: e.target.value} : item
+                            )
+                          )
+                        }
+                      />
+                    )}     
+                    {key.type == "boolean" && (
+                      <button
+                        className="hover:opacity-60 border w-[200px] text-center border rounded hover:shadow hover:shadow-inner hover:border-black"
+                        onClick={() => 
+                          setKeys((prevKeys) => 
+                            prevKeys.map((item) => 
+                              item.key == key.key ? {...item, takeWhat: key.takeWhat ? false : true} : item
+                            )
+                          )
+                        }
+                      >
+                        {key.takeWhat ? 'True' : 'False'}
+                      </button>
+                      )}              
+                  </>
+               
                 )
                 }
 
