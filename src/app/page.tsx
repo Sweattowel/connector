@@ -1,85 +1,31 @@
 "use client"
-import userData from "./DUMMYDATA/DummyData.json"
-import storeData from "./DUMMYDATA/DummyStoreData.json"
+
 
 import { useState } from "react";
 import TransformData from "./Transform/Page";
 import Export from "./Export/page";
-/*
-  Data format needs to be fluid so as to handle anything for conversion
-
-
-*/
+import Import from "./IMPORT/page";
 
 const tablesTable: string[] = ['userData', 'storeData', "computerData"]
 
 export default function Home() {
   const [importedData, setImportedData] = useState<any[]>([])
-  const [tables, setTables] = useState<string[]>([])
   const [newKeys, SetNewKeys] = useState([])
 
-  function importData(tableChoice: string){
-    switch (tableChoice) {
-      case "userData":
-        setImportedData(userData)        
-        break;
-      case "storeData":
-        setImportedData(storeData)
-        break;
-      default:
-        break;
-    }
 
-  }
-  function callTables(){
-    if (tablesTable.length > 0){
-      setTables(tablesTable)
-    }
-  }
 
   return (
     <main className="flex min-h-[250vh] flex-col items-center justify-evenly p-24 bg-black">      
-    <section 
-        className="border border-white p-5 rounded-lg h-[10vh] w-[80vw] flex text-white"
+      <section 
+          className="border border-white p-5 rounded-lg h-[150px] w-[80vw] flex text-white"
       >
-        <ul
-          className="overflow-auto flex w-[80%] justify-evenly"
-        >
-          {tables.map((table: string, index: number) => (
-            <div 
-            key={index}
-              className="flex flex-col justify-center items-center "
-            >
-              <button
-                className="border rounded-lg text-center p-2 hover:shadow hover:shadow-white hover:border-black shadow"
-                onClick={() => importData(table)}
-              >
-                Import {table}
-              </button>            
-            </div>
-          ))}          
-        </ul>
-        <div>
-          <button
-            className="border rounded-lg text-center p-2 hover:bg-black hover:text-white w-full"
-            onClick={() => callTables()}
-          >
-            Import tables
-          </button>
-          <button
-            className="border rounded-lg text-center p-2 hover:bg-black hover:text-white w-full"
-            onClick={() => callTables()}
-          >
-            Export data
-          </button>
-        </div>
-
+        <Import setImportedData={setImportedData}/>
       </section>
       <section className="border  w-[90vw] bg-white rounded-lg">
         <h2
           className="font-bold text-center w-full border-b h-[50px] flex justify-center items-center"
         >
-          View data
+          Display data
         </h2>
         {importedData.length > 0 &&
           (
