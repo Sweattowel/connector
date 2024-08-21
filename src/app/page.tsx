@@ -5,6 +5,7 @@ import { useState } from "react";
 import TransformData from "./Transform/Page";
 import Export from "./Export/page";
 import Import from "./IMPORT/page";
+import DisplayData from "./Display/page";
 
 const tablesTable: string[] = ['userData', 'storeData', "computerData"]
 
@@ -27,52 +28,7 @@ export default function Home() {
         >
           Display data
         </h2>
-        {importedData.length > 0 &&
-          (
-            <div
-              className="flex flex-row justify-evenly items-center h-[50px] w-[calc(90vw-1px)] rounded-t-lg absolute bg-white"
-            >
-              {Object.entries(importedData[0]).map(([key, value], index: number) => (
-                <div
-                  className={`flex-1 h-[100%] flex flex-col items-center shadow-xl justify-center`}
-                  key={index}
-                >
-                  {key}
-                </div>
-              ))}
-            </div>            
-          )
-        }
-
-          <div className={`${importedData.length > 0 && "mt-[52px]"} max-h-[80vh] overflow-auto divide-y`}>
-            {importedData.length > 0 ? (
-              importedData.map((data: any, index: number) => (
-                <li
-                  className="flex flex-row justify-evenly items-center h-[150px]"
-                  key={index}
-                >
-                  {Object.entries(data).map(([key, value]: any, i) => (
-                    <div
-                      className={`flex-1 h-[100%] flex flex-col items-center`}
-                      key={i}
-                    >
-                      <div
-                        className={`${
-                          value.length > 30 ? "overflow-auto text-center text-[0.7rem] p-1 " : "p-1"
-                        } text-wrap w-[100%] h-full text-wrap flex justify-center items-center`}
-                      >
-                        {typeof(value) == "boolean" ? `${value ? "True" : "false"}` : value}
-                      </div>
-                    </div>
-                  ))}
-                </li>
-              ))
-            ) : (
-              <div className="flex justify-center items-center m-auto h-full w-full">
-                Please Import Data
-              </div>
-            )}
-          </div>
+        <DisplayData importedData={importedData} />
       </section>
       <section
         className="bg-white w-[90vw] rounded p-5"
